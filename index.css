@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+@font-face {
+  font-family: 'ArticulatCF-Bold';
+  src: local('ArticulatCF-Bold'),
+    url(./Assets/ArticulatCF-Bold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'ArticulatCF-DemiBold';
+  src: local('ArticulatCF-DemiBold'),
+    url(./Assets/ArticulatCF-DemiBold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'ArticulatCF-ExtraBold';
+  src: local('ArticulatCF-ExtraBold'),
+    url(./Assets/ArticulatCF-ExtraBold.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'ArticulatCF-Heavy';
+  src: local('ArticulatCF-Heavy'),
+    url(./Assets/ArticulatCF-Heavy.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'ArticulatCF-Medium';
+  src: local('ArticulatCF-Medium'),
+    url(./Assets/ArticulatCF-Medium.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'ArticulatCF-Normal';
+  src: local('ArticulatCF-Normal'),
+    url(./Assets/ArticulatCF-Normal.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'ArticulatCF-Thin';
+  src: local('ArticulatCF-Thin'),
+    url(./Assets/ArticulatCF-Thin.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'ArticulatCF-Light';
+  src: local('ArticulatCF-Light'),
+    url(./Assets/ArticulatCF-Light.ttf) format('truetype');
+}
