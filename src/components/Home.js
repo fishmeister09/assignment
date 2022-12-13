@@ -61,7 +61,7 @@ export const Home = () => {
     console.log(data);
     await addDoc(collection(db, 'posts'), data).then((docRef) => {
       console.log(docRef);
-      setName('');
+      setName('rahul');
       setNumber('');
       setLoading(false);
     });
