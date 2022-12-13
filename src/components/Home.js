@@ -14,7 +14,7 @@ import { useState, useEffect } from 'react';
 
 export const Home = () => {
   const { logOut, user } = useUserAuth();
-  const [name, setName] = useState('');
+  const [name, setName] = useState('rahul');
   const [number, setNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [chooseName, setChooseName] = useState([]);
