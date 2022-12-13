@@ -111,11 +111,12 @@ export const ShowData = () => {
     const PrintsData = Object.keys(groupByName).map((post, index) => {
       return (
         <div>
-          entry {index + 1}. {post}
+          <b>entry {index + 1}.</b>
+          <br />
           {groupByName[post].map((entry) => {
             return (
               <li>
-                {entry.number} - {entry.token}
+                {post} - {entry.number} - {entry.token}
               </li>
             );
           })}
