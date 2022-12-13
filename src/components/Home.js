@@ -91,7 +91,7 @@ export const Home = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <span>Choose Name</span>
-          <select onChange={(e) => setName(e.target.value)}>
+          <select value={name} onChange={(e) => setName(e.target.value)}>
             {chooseName.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
