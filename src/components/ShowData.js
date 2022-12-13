@@ -3,7 +3,7 @@ import { db } from '../Firebase';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useEffect, useState, useMemo } from 'react';
-import { renderToString } from 'react-dom/server';
+import { renderToStaticMarkup } from 'react-dom/server';
 import jsPDF from 'jspdf';
 import { useTable, useBlockLayout } from 'react-table';
 
@@ -107,8 +107,9 @@ export const ShowData = () => {
       group[name].push(post);
       return group;
     }, {});
-
-    const PrintsData = Object.keys(groupByName).map((post, index) => {
+    const pdf = new jsPDF();
+    let string;
+    const d = (index, post) => {
       return (
         <div>
           <b>entry {index + 1}.</b>
@@ -122,16 +123,21 @@ export const ShowData = () => {
           })}
         </div>
       );
+    };
+    console.log();
+    Object.keys(groupByName).map((post, index) => {
+      string = d(index, post);
+      pdf.fromHTML(renderToStaticMarkup(string));
+      if (Object.keys(groupByName).length - 1 > index) {
+        pdf.addPage();
+      }
     });
-    return PrintsData;
+    pdf.save('doc.pdf');
   }
 
-  const print = (byName) => {
-    const string = renderToString(
-      byName ? <PrintByName /> : <PrintAllTokens />
-    );
+  const printToken = () => {
     const pdf = new jsPDF();
-    pdf.fromHTML(string);
+    pdf.fromHTML(renderToStaticMarkup(<PrintAllTokens />));
     pdf.save('document');
   };
 
@@ -187,7 +193,7 @@ export const ShowData = () => {
       let postDate = new Date(post.date);
 
       if (
-        postDate.getTime() >= startDate.getTime() &&
+        postDate.getTime() >= startDate.getTime() - 86400000 &&
         postDate.getTime() <= endDate.getTime() + 86400000
       ) {
         newData.push(post);
@@ -222,8 +228,8 @@ export const ShowData = () => {
       <div className="table">
         {posts.length > 0 ? <Table columns={columns} data={data} /> : null}
       </div>
-      <button onClick={() => print(false)}>print all tokens</button>
-      <button onClick={() => print(true)}>print by name</button>
+      <button onClick={() => printToken()}>print all tokens</button>
+      <button onClick={() => PrintByName()}>print by name</button>
     </div>
   );
 };
