@@ -110,27 +110,21 @@ export const ShowData = () => {
     const pdf = new jsPDF();
     let string;
     const d = (index, post) => {
-      return (
-        <div>
-          <b>entry {index + 1}.</b>
-          <br />
-          {groupByName[post].map((entry) => {
-            return (
-              <li>
-                {post} - {entry.number} - {entry.token}
-              </li>
-            );
-          })}
-        </div>
-      );
+      return groupByName[post].map((entry) => {
+        string = (
+          <li>
+            {post} - {entry.number} - {entry.token}
+          </li>
+        );
+        pdf.fromHTML(renderToStaticMarkup(string));
+        if (Object.keys(groupByName).length - 1 > index) {
+          pdf.addPage();
+        }
+      });
     };
-    console.log();
+
     Object.keys(groupByName).map((post, index) => {
-      string = d(index, post);
-      pdf.fromHTML(renderToStaticMarkup(string));
-      if (Object.keys(groupByName).length - 1 > index) {
-        pdf.addPage();
-      }
+      d(index, post);
     });
     pdf.save('doc.pdf');
   }
@@ -194,7 +188,7 @@ export const ShowData = () => {
 
       if (
         postDate.getTime() >= startDate.getTime() - 86400000 &&
-        postDate.getTime() <= endDate.getTime() + 86400000
+        postDate.getTime() <= endDate.getTime()
       ) {
         newData.push(post);
       }
