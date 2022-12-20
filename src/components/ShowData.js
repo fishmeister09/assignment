@@ -5,20 +5,23 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useEffect, useState, useMemo } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import jsPDF from 'jspdf';
-import { useTable, useBlockLayout } from 'react-table';
+
+import { useTable, useBlockLayout, useSortBy } from 'react-table';
 
 function Table({ columns, data }) {
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    state,
+
     rows,
     prepareRow,
   } = useTable(
     {
       columns,
       data,
+
+      useSortBy,
     },
 
     useBlockLayout
@@ -62,7 +65,6 @@ export const ShowData = () => {
   const [startDate, setStartDate] = useState(currentDate);
   const [endDate, setEndDate] = useState(currentDate);
   const q = query(collection(db, 'posts'), orderBy('token'));
-
   const readFunction = async () => {
     const querySnapshot = await getDocs(q);
     let feed = [];
@@ -71,6 +73,15 @@ export const ShowData = () => {
         ...doc.data(),
         key: doc.id,
       });
+    });
+    feed.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
     });
     setPosts(feed);
     setTableData(feed);
@@ -101,31 +112,46 @@ export const ShowData = () => {
     );
   }
   function PrintByName() {
-    const groupByName = posts.reduce((group, post) => {
-      const { name } = post;
-      group[name] = group[name] ?? [];
-      group[name].push(post);
-      return group;
-    }, {});
+    // const groupByName = posts.reduce((group, post) => {
+    //   const { name } = post;
+    //   group[name] = group[name] ?? [];
+    //   group[name].push(post);
+    //   return group;
+    // }, {});
+    // const pdf = new jsPDF();
+    // let string;
+
+    // const d = (post) => {
+    //   return groupByName[post].forEach((entry, index) => {
+    //     string = (
+    //       <li>
+    //         {post} - {entry.number} - {entry.token}
+    //       </li>
+    //     );
+    //     pdf.fromHTML(renderToStaticMarkup(string));
+    //     pdf.addPage();
+    //   });
+    // };
+
+    // Object.keys(groupByName).forEach((post) => {
+    //   d(post);
+    // });
+    // pdf.save('doc.pdf');
     const pdf = new jsPDF();
     let string;
-    const d = (index, post) => {
-      return groupByName[post].map((entry) => {
-        string = (
-          <li>
-            {post} - {entry.number} - {entry.token}
-          </li>
-        );
-        pdf.fromHTML(renderToStaticMarkup(string));
-        if (Object.keys(groupByName).length - 1 > index) {
-          pdf.addPage();
-        }
-      });
+    const d = (post, i) => {
+      string = (
+        <li>
+          {post.name} - {post.number} - {post.token}
+        </li>
+      );
+      pdf.fromHTML(renderToStaticMarkup(string));
+      if (i < posts.length - 1) pdf.addPage();
     };
 
-    Object.keys(groupByName).map((post, index) => {
-      d(index, post);
-    });
+    for (let i = 0; i < posts.length; i++) {
+      d(posts[i], i);
+    }
     pdf.save('doc.pdf');
   }
 
@@ -187,13 +213,19 @@ export const ShowData = () => {
       let postDate = new Date(post.date);
 
       if (
-        postDate.getTime() >= startDate.getTime() - 86400000 &&
-        postDate.getTime() <= endDate.getTime()
+        postDate.getDate() >= startDate.getDate() &&
+        postDate.getMonth() >= startDate.getMonth() &&
+        postDate.getFullYear() >= startDate.getFullYear()
       ) {
-        newData.push(post);
+        if (
+          postDate.getDate() <= endDate.getDate() &&
+          postDate.getMonth() <= endDate.getMonth() &&
+          postDate.getFullYear() <= endDate.getFullYear()
+        ) {
+          newData.push(post);
+        }
       }
     });
-
     setTableData(newData);
   };
   return (
@@ -202,6 +234,7 @@ export const ShowData = () => {
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <label>Start Date</label>
           <DatePicker
+            dateFormat={'dd/MM/yyyy'}
             selected={startDate}
             onChange={(date) => {
               setStartDate(date);
@@ -211,6 +244,7 @@ export const ShowData = () => {
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <label>End Date</label>
           <DatePicker
+            dateFormat={'dd/MM/yyyy'}
             selected={endDate}
             onChange={(date) => {
               setEndDate(date);
