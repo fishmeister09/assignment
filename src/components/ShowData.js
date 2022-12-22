@@ -146,11 +146,11 @@ export const ShowData = () => {
         </li>
       );
       pdf.fromHTML(renderToStaticMarkup(string));
-      if (i < posts.length - 1) pdf.addPage();
+      if (i < tableData.length - 1) pdf.addPage();
     };
 
-    for (let i = 0; i < posts.length; i++) {
-      d(posts[i], i);
+    for (let i = 0; i < tableData.length; i++) {
+      d(tableData[i], i);
     }
     pdf.save('doc.pdf');
   }
@@ -252,6 +252,7 @@ export const ShowData = () => {
           />
         </div>
         <button onClick={() => filterData()}>filter Data</button>
+        <button onClick={() => setTableData(posts)}>reset filter</button>
       </div>
       <div className="table">
         {posts.length > 0 ? <Table columns={columns} data={data} /> : null}
